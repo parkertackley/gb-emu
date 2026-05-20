@@ -13,7 +13,7 @@
   |Timer|
 */
 
-statuc emu_context ctx;
+static emu_context ctx;
 
 emu_context *get_emu_context()
 {
