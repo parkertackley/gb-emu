@@ -22,7 +22,7 @@ emu_context *get_emu_context()
 
 void delay(u32 ms)
 {
-  SDL_delay(ms);
+  SDL_Delay(ms);
 }
 
 int emu_run(int argc, char **argv)
@@ -65,7 +65,7 @@ int emu_run(int argc, char **argv)
       return -3;
     }
 
-    cpu.ticks++;
+    ctx.ticks++;
 
   }
 

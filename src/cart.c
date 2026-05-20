@@ -9,7 +9,7 @@ typedef struct {
 
 static cart_context ctx;
 
-static const char *ROM_TYPES = {
+static const char *ROM_TYPES[] = {
 	"ROM ONLY",
 	"MBC1",
 	"MBC1+RAM",
@@ -40,7 +40,7 @@ static const char *ROM_TYPES = {
 	"HuC1+RAM+BATTERY",
 };
 
-static const char *LIC_CODE[0xDK] = {
+static const char *LIC_CODE[0xA5] = {
   [0x00] = "None",
   [0x01] = "Nintendo Research & Development 1",
   [0x08] = "Capcom",
@@ -106,7 +106,7 @@ static const char *LIC_CODE[0xDK] = {
 
 const char *cart_lic_name()
 {
-  if (ctx.header->new_lic_code <= 0xDK)
+  if (ctx.header->new_lic_code <= 0xA5)
   {
     return LIC_CODE[ctx.header->new_lic_code];
   }
@@ -147,7 +147,7 @@ bool cart_load(char *cart)
   fclose(fptr);
 
   ctx.header = (rom_header *)(ctx.rom_data + 0x100);
-  ctx.header->title = 0;
+  ctx.header->title[15] = 0;
 
   /* TODO: print loaded rom info here */
 
