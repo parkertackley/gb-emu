@@ -1,6 +1,7 @@
 #pragma once  
 
 #include <common.h>
+#include <instructions.h>
 
 typedef struct {
   u8 a;
@@ -15,6 +16,19 @@ typedef struct {
   u16 sp;
   u16 pc;
 } cpu_registers;
+
+typedef struct {
+  cpu_registers registers;
+  instruction *curr_inst;
+
+  u16 fetch_data;
+  u16 mem_dest;
+  u8 curr_opcode;
+
+  bool halted;
+  bool stepping;
+
+} cpu_context;
 
 void cpu_init();
 bool cpu_step();
