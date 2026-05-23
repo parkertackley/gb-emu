@@ -135,7 +135,7 @@ bool cart_load(char *cart)
     return false;
   }
   printf("%s opened!\n", ctx.filename);
-  
+
   /* Get size of ROM */
   fseek(fptr, 0, SEEK_END);
   ctx.rom_size = ftell(fptr);
@@ -146,10 +146,11 @@ bool cart_load(char *cart)
   fread(ctx.rom_data, ctx.rom_size, 1, fptr);
   fclose(fptr);
 
+  /* Header starts at 0x100, so we populate from here */
   ctx.header = (rom_header *)(ctx.rom_data + 0x100);
   ctx.header->title[15] = 0;
-
-  /* TODO: print loaded rom info here */
+  
+  /* Print information about the cartridge */
   printf("\t Title    : %s\n", ctx.header->title);
   printf("\t Type     : %2.2X (%s)\n", ctx.header->type, cart_type_name());
   printf("\t ROM Size : %d KB\n", 32 << ctx.header->rom_size);
@@ -157,15 +158,25 @@ bool cart_load(char *cart)
   printf("\t LIC Code : %2.2X (%s)\n", ctx.header->new_lic_code, cart_lic_name());
   printf("\t ROM Vers : %2.2X\n", ctx.header->version);
 
+  /* Checksum to ensure ROM was loaded correctly */
   u8 checksum = 0;
   for(u16 address = 0x134; address <= 0x014C; address++)
   {
     checksum = checksum - ctx.rom_data[address] - 1;
   }
-
   printf("\t Checksum : %2.2X (%s)\n", ctx.header->checksum, (checksum & 0xFF) ? "PASSED" : "FAILED");
 
   return true;
 
+}
+
+u8 cart_read(u16 address
+{
+  return ctx.rom_data[address]
+}
+
+void cart_write(u16 addres, u8 value)
+{
+  // TODO: implement this
 }
 

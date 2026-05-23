@@ -41,6 +41,7 @@ int emu_run(int argc, char **argv)
 
   printf("Cart loaded...\n");
   SDL_Init(SDL_INIT_VIDEO);
+  printf("SDL Init\n");
   TTF_Init();
   printf("TTF INIT\n");
 
