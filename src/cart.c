@@ -1,4 +1,4 @@
-#include <cart.h>
+#include "cart.h"
 
 typedef struct {
   char filename[1024];
@@ -170,12 +170,13 @@ bool cart_load(char *cart)
 
 }
 
-u8 cart_read(u16 address
+u8 cart_read(u16 address)
 {
-  return ctx.rom_data[address]
+  /* TODO: For now, just rom type supported */
+  return ctx.rom_data[address];
 }
 
-void cart_write(u16 addres, u8 value)
+void cart_write(u16 address, u8 value)
 {
   // TODO: implement this
 }

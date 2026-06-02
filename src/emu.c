@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <emu.h>
-#include <cart.h>
-#include <cpu.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include "stdio.h"
+#include "emu.h"
+#include "cart.h"
+#include "cpu.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 
 /*  
   |CART|
@@ -74,3 +74,8 @@ int emu_run(int argc, char **argv)
 
 }
 
+void
+emu_cycles(int cpu_cycles)
+{
+  // TODO: implement this
+}

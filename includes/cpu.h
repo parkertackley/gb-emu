@@ -1,7 +1,7 @@
 #pragma once  
 
-#include <common.h>
-#include <instructions.h>
+#include "common.h"
+#include "instructions.h"
 
 typedef struct {
   u8 a;
@@ -10,7 +10,6 @@ typedef struct {
   u8 d;
   u8 e;
   u8 f;
-  u8 g;
   u8 h;
   u8 l;
   u16 sp;
@@ -19,12 +18,19 @@ typedef struct {
 
 typedef struct {
   cpu_registers registers;
+
+  /* Current instruction */
   instruction *curr_inst;
 
-  u16 fetch_data;
+  /* Current fetch */
+  u16 fetched_data;
+
   u16 mem_dest;
   u8 curr_opcode;
 
+  bool dest_is_mem;
+
+  /* State */
   bool halted;
   bool stepping;
 

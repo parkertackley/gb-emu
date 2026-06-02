@@ -1,8 +1,8 @@
-#include <instructions.h>
-#include <cpu.h>
+#include "instructions.h"
+#include "cpu.h"
 
-instruciton instrucitons[0x100] = {
-  [0x0] = {IN_OP, AM_IMP},
+instruction instructions[0x100] = {
+  [0x0] = {IN_NOP, AM_IMP},
 
   [0x05] = {IN_DEC, AM_R, RT_B},
 
@@ -11,7 +11,7 @@ instruciton instrucitons[0x100] = {
   [0xAF] = {IN_XOR, AM_R, RT_A},
 
   [0xC3] = {IN_JP, AM_D16}
-}
+};
 
 instruction *instruction_by_opcode(u8 opcode)
 {

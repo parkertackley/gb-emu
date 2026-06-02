@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common.h>
+#include "common.h"
 
 typedef enum {
   AM_IMP,
@@ -32,13 +32,13 @@ typedef enum {
   IN_LD,
   IN_INC,
   IN_DEC,
-  IN_RLCA
+  IN_RLCA,
   IN_ADD,
   IN_RRCA,
   IN_STOP,
   IN_RLA,
   IN_JP,
-  IN_RRA, 
+  IN_RRA,
   IN_DAA,
   IN_CPL,
   IN_SCF,
@@ -61,7 +61,7 @@ typedef enum {
   IN_LDH,
   IN_DI,
   IN_EI,
-  /* CB instrucions */ 
+  /* CB instructions */
   IN_RLC,
   IN_RRC,
   IN_RL,
@@ -72,8 +72,8 @@ typedef enum {
   IN_SRL,
   IN_BIT,
   IN_RES,
-  IN_SET 
-} in_type; 
+  IN_SET
+} in_type;
 
 typedef enum {
   RT_A,
@@ -97,16 +97,26 @@ typedef enum {
   CT_NZ,
   CT_Z,
   CT_NC,
-  RT_C
+  CT_C
 } cond_type;
 
-typedef struct { 
+typedef struct {
+  /* Type of instruction (ADD, SUB, etc...) */
   in_type type; 
-  addr_mode mode; 
+
+  /* Addressing mode */ 
+  addr_mode mode;
+
+  /* Registers used */
   reg_type reg_1;
   reg_type reg_2; 
+
+  /* Condition code */
   cond_type cond; 
+
+  /* Optional parameters for CB instructions */
   u8 param; 
+
 } instruction;
 
 instruction *instruction_by_opcode(u8 opcode);

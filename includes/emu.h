@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common.h>
+#include "common.h"
 
 typedef struct {
   bool paused;
@@ -11,3 +11,5 @@ typedef struct {
 int emu_run(int arc, char** argv);
 
 emu_context *emu_get_context();
+
+void emu_cycles(int cpu_cycles);
