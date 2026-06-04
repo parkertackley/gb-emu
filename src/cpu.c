@@ -32,6 +32,11 @@ fetch_data()
   ctx.mem_dest = 0;
   ctx.dest_is_mem = false;
 
+  if (ctx.curr_inst == NULL)
+  {
+    return;
+  }
+
   switch(ctx.curr_inst->mode)
   {
     case AM_IMP:
@@ -52,7 +57,7 @@ fetch_data()
       u16 lo = bus_read(ctx.registers.pc);
       emu_cycles(1);
 
-      u16 hi = bus_read(ctx.registers.pc);
+      u16 hi = bus_read(ctx.registers.pc + 1);
       emu_cycles(1);
 
       ctx.fetched_data = lo | (hi << 8);
@@ -72,6 +77,15 @@ fetch_data()
 static void
 execute()
 {
+  IN_PROC proc = inst_get_proc(ctx.curr_inst->type);
+
+  if (!proc)
+  {
+    printf("execute!\n");
+    NO_IMPL
+  }
+
+  proc(&ctx);
 
 }
 
@@ -83,7 +97,11 @@ cpu_step()
     const u16 pc = ctx.registers.pc;
     fetch_instruction();
     fetch_data();
-    printf("Executing instruction: %02X   PC: %04X\n", ctx.curr_opcode, pc);
+
+    printf("%04X: %-7s (%02X %02X %02X) A: %02X B: %02X C: %02X\n",
+            pc, inst_name(ctx.curr_inst->type), ctx.curr_opcode,
+            bus_read(pc + 1), bus_read(pc + 2), ctx.registers.a, ctx.registers.b, ctx.registers.c);
+
     execute();
   }
 

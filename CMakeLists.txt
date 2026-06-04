@@ -15,6 +15,7 @@ set(SOURCES
         src/ppu.c
         src/timer.c
         src/cpu_util.c
+        src/cpu_proc.c
 )
 
 add_executable(gb-emu ${SOURCES})

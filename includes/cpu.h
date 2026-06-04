@@ -34,8 +34,15 @@ typedef struct {
   bool halted;
   bool stepping;
 
+  bool int_master_enabled;
+
 } cpu_context;
 
 void cpu_init();
 bool cpu_step();
 
+typedef void (*IN_PROC)(cpu_context *);
+IN_PROC inst_get_proc(in_type type);
+
+#define CPU_FLAG_Z BIT(ctx->registers.f, 7)
+#define CPU_FLAG_C BIT(ctx->registers.f, 4)
