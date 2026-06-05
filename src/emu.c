@@ -15,17 +15,49 @@
 
 static emu_context ctx;
 
-emu_context *get_emu_context()
+/**
+ * Provides global access to the core emulator context
+ *
+ * @warning Returns a mutable pointer. Modifying this directly impacts the state of the emulation thread.
+ *
+ * @return emu_context* Pointer to the active emulator context
+ */
+emu_context
+*get_emu_context(void)
 {
   return &ctx;
 }
 
-void delay(u32 ms)
+/**
+ * Pauses execution of the current thread for specified duration
+ *
+ * @param ms Time in milliseconds to pause the thread
+ */
+void
+delay(const u32 ms)
 {
   SDL_Delay(ms);
 }
 
-int emu_run(int argc, char **argv)
+/**
+ * Main execution entry point for the emulator
+ *
+ * 1. Validate CLI arguments
+ * 2. Load ROM cartridge
+ * 3. INIT SDL subsystems
+ * 4. Bootstrap CPU
+ * 5. Execute game loop until exit condition is met
+ *
+ * @param argc Number of arguments passed at the command line
+ * @param argv Array of command line arguments
+ *
+ * @return 0  Success The emulation completed cleanly
+ * @return -1 Error Missing CLI arguments (ROM name not provided)
+ * @return -2 Error Cartridge could not be loaded
+ * @return -3 Error CPU encountered an error
+ */
+int
+emu_run(const int argc, char **argv)
 {
   if (argc < 2)
   {
@@ -74,6 +106,11 @@ int emu_run(int argc, char **argv)
 
 }
 
+/**
+ * TODO:This
+ *
+ * @param cpu_cycles Number of CPU cycles to emulate
+ */
 void
 emu_cycles(int cpu_cycles)
 {

@@ -1,3 +1,6 @@
+#files
+roms/tetris.gb
+
 # directories
 build/
 .idea/

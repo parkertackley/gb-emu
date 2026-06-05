@@ -3,13 +3,13 @@
 extern cpu_context ctx;
 
 u16
-reverse(u16 n)
+reverse(const u16 n)
 {
     return ((n & 0xFF00) >> 8) | (n & 0x00FF);
 }
 
 u16
-cpu_read_reg(reg_type reg)
+cpu_read_reg(const reg_type reg)
 {
     switch (reg)
     {

@@ -10,6 +10,7 @@ void cpu_init()
   // TODO: implement this
   /* Set entry point */
   ctx.registers.pc = 0x100;
+  ctx.registers.a = 0x01;
 }
 
 static void
@@ -17,13 +18,6 @@ fetch_instruction()
 {
   ctx.curr_opcode = bus_read(ctx.registers.pc++);
   ctx.curr_inst = instruction_by_opcode(ctx.curr_opcode);
-
-  if (ctx.curr_inst == NULL)
-  {
-    printf("Unknown instruction! %02X\n", ctx.curr_opcode);
-    exit(-7);
-  }
-
 }
 
 static void
@@ -34,6 +28,7 @@ fetch_data()
 
   if (ctx.curr_inst == NULL)
   {
+    printf("null instruction\n");
     return;
   }
 
@@ -54,10 +49,10 @@ fetch_data()
 
     case AM_D16:
     {
-      u16 lo = bus_read(ctx.registers.pc);
+      const u16 lo = bus_read(ctx.registers.pc);
       emu_cycles(1);
 
-      u16 hi = bus_read(ctx.registers.pc + 1);
+      const u16 hi = bus_read(ctx.registers.pc + 1);
       emu_cycles(1);
 
       ctx.fetched_data = lo | (hi << 8);
@@ -69,19 +64,17 @@ fetch_data()
 
     default:
       printf("Unknown addressing mode! %d\n", ctx.curr_inst->mode);
-      exit(1);
-
+      exit(-7);
   }
 }
 
 static void
 execute()
 {
-  IN_PROC proc = inst_get_proc(ctx.curr_inst->type);
+  const IN_PROC proc = inst_get_proc(ctx.curr_inst->type);
 
   if (!proc)
   {
-    printf("execute!\n");
     NO_IMPL
   }
 
@@ -95,6 +88,7 @@ cpu_step()
   if(!ctx.halted)
   {
     const u16 pc = ctx.registers.pc;
+
     fetch_instruction();
     fetch_data();
 

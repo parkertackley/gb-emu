@@ -16,15 +16,10 @@ instruction instructions[0x100] = {
 
 };
 
-instruction *instruction_by_opcode(u8 opcode)
+instruction
+*instruction_by_opcode(const u8 opcode)
 {
-  if(instructions[opcode].type == IN_NONE)
-  {
-    return NULL;
-  }
-
   return &instructions[opcode];
-
 }
 
 char *inst_lookup[] = {
@@ -76,6 +71,6 @@ char *inst_lookup[] = {
 };
 
 char
-*inst_name(in_type t) {
+*inst_name(const in_type t) {
   return inst_lookup[t];
 }

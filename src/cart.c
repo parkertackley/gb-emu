@@ -1,5 +1,8 @@
 #include "cart.h"
 
+/**
+ * Represents the physical ROM cartridge data and file metadata
+ */
 typedef struct {
   char filename[1024];
   u32 rom_size;
@@ -7,40 +10,51 @@ typedef struct {
   rom_header *header;
 } cart_context;
 
+/**
+ * Initialization of cart_context object
+ */
 static cart_context ctx;
 
-static const char *ROM_TYPES[] = {
-	"ROM ONLY",
-	"MBC1",
-	"MBC1+RAM",
-	"MBC1+RAM+BATTERY",
-	"MBC2",
-	"MBC2+BATTERY",
-	"ROM+RAM 11",
-	"ROM+RAM+BATTERY 11",
-	"MMM01",
-	"MMM01+RAM",
-	"MMM01+RAM+BATTERY",
-	"MBC3+TIMER+BATTERY",
-	"MBC3+TIMER+RAM+BATTERY 12",
-	"MBC3",
-	"MBC3+RAM 12",
-	"MBC3+RAM+BATTERY 12",
-	"MBC5",
-	"MBC5+RAM",
-	"MBC5+RAM+BATTERY",
-	"MBC5+RUMBLE",
-	"MBC5+RUMBLE+RAM",
-	"MBC5+RUMBLE+RAM+BATTERY",
-	"MBC6",
-	"MBC7+SENSOR+RUMBLE+RAM+BATTERY",
-	"POCKET CAMERA",
-	"BANDAI TAMA5",
-	"HuC3",
-	"HuC1+RAM+BATTERY",
+/**
+ * Lookup table for Game Boy Cartridge Types
+ */
+static const char
+*ROM_TYPES[] = {
+	[0x00] = "ROM ONLY",
+	[0x01] = "MBC1",
+	[0x02] = "MBC1+RAM",
+	[0x03] = "MBC1+RAM+BATTERY",
+	[0x05] = "MBC2",
+	[0x06] = "MBC2+BATTERY",
+	[0x08] = "ROM+RAM",
+	[0x09] = "ROM+RAM+BATTERY",
+	[0x0B] = "MMM01",
+	[0x0C] = "MMM01+RAM",
+	[0x0D] = "MMM01+RAM+BATTERY",
+	[0x0F] = "MBC3+TIMER+BATTERY",
+	[0x10] = "MBC3+TIMER+RAM+BATTERY",
+	[0x11] = "MBC3",
+	[0x12] = "MBC3+RAM",
+	[0x13] = "MBC3+RAM+BATTERY",
+	[0x19] = "MBC5",
+	[0x1A] = "MBC5+RAM",
+	[0x1B] = "MBC5+RAM+BATTERY",
+	[0x1C] = "MBC5+RUMBLE",
+	[0x1D] = "MBC5+RUMBLE+RAM",
+	[0x1E] = "MBC5+RUMBLE+RAM+BATTERY",
+	[0x20] = "MBC6",
+	[0x22] = "MBC7+SENSOR+RUMBLE+RAM+BATTERY",
+	[0xFC] = "POCKET CAMERA",
+	[0xFD] = "BANDAI TAMA5",
+	[0xFE] = "HuC3",
+	[0xFF] = "HuC1+RAM+BATTERY",
 };
 
-static const char *LIC_CODE[0xA5] = {
+/**
+ * Lookup table for Game Boy Cartridge New Licensee code
+ */
+static const char
+*LIC_CODE[0xA5] = {
   [0x00] = "None",
   [0x01] = "Nintendo Research & Development 1",
   [0x08] = "Capcom",
@@ -104,16 +118,30 @@ static const char *LIC_CODE[0xA5] = {
   [0xA4] = "Konami (Yu-Gi-Oh!)"
 };
 
-const char *cart_lic_name()
+/**
+ * Maps the cartridge licensee code to the corresponding string in LIC_CODE
+ *
+ * @return const char* A pointer to the static publisher string
+ * @return "UNKNOWN" if the code is invalid or unmapped
+ */
+const char
+*cart_lic_name()
 {
   if (ctx.header->new_lic_code <= 0xA5)
   {
     return LIC_CODE[ctx.header->new_lic_code];
   }
-  return "UNKOWN";
+  return "UNKNOWN";
 }
 
-const char *cart_type_name()
+/**
+ * Maps the cartridge type to the corresponding string in ROM_TYPES
+ *
+ * @return const char* A pointer to the static rom type string
+ * @return "UNKNOWN" if the code is invalid or unmapped
+ */
+const char
+*cart_type_name()
 {
   if (ctx.header->type <= 0x1B)
   {
@@ -122,7 +150,24 @@ const char *cart_type_name()
   return "UNKNOWN";
 }
 
-bool cart_load(char *cart)
+/**
+ * Loads a ROM file from disk, allocates internal memory buffers,
+ * and validates the hardware header metadata
+ *
+ * 1. Streams file to determine its size
+ * 2. Allocates heap buffer to copy ROM into memory
+ * 3. Maps rom_header directly over memory offset 0x100
+ * 4. Parses internal metrics
+ * 5. Executes a checksum to ensure data integrity
+ *
+ * @warning Memory allocation: ctx.rom_data must be freed during system cleanup
+ *
+ * @param cart Name of the file to be opened
+ * @return true		Success, the file was read
+ * @return false	Error, the file could not be opened
+ */
+bool
+cart_load(char *cart)
 {
   snprintf(ctx.filename, sizeof(ctx.filename), "%s", cart);
   
@@ -170,13 +215,27 @@ bool cart_load(char *cart)
 
 }
 
-u8 cart_read(u16 address)
+/**
+ * Reads a single byte of data from the cartridge ROM at the specified memory address
+ *
+ * @param address A 16-bit memory address from the CPU bus
+ * @return u8 The 8-bit byte of data stored at the ROM address
+ */
+u8
+cart_read(const u16 address)
 {
   /* TODO: For now, just rom type supported */
   return ctx.rom_data[address];
 }
 
-void cart_write(u16 address, u8 value)
+/**
+ * Writes the given 8-bit value to the cartridge ROM at the specified memory address
+ * 
+ * @param address A 16-bit memory address from the CPU bus
+ * @param value An 8-bit value to be written
+ */
+void
+cart_write(u16 address, u8 value)
 {
   // TODO: implement this
 }
