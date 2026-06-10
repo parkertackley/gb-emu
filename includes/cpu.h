@@ -43,6 +43,7 @@ bool cpu_step();
 
 typedef void (*IN_PROC)(cpu_context *);
 IN_PROC inst_get_proc(in_type type);
+void fetch_data();
 
 #define CPU_FLAG_Z BIT(ctx->registers.f, 7)
 #define CPU_FLAG_C BIT(ctx->registers.f, 4)
