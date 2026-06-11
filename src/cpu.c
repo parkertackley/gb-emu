@@ -3,6 +3,10 @@
 #include "cpu_util.h"
 #include "emu.h"
 
+/*
+ * Sets the first member to 0, then auto sets bools to false, NULL for pointers
+ * Safety to overwrite the garbage that was leftover on the stack
+ */
 cpu_context ctx = {0};
 
 void cpu_init()

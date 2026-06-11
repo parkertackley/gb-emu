@@ -1,7 +1,7 @@
 #include "emu.h"
 
 int
-main(int argc, char **argv)
+main(const int argc, char **argv)
 {
   return emu_run(argc, argv);
 }
