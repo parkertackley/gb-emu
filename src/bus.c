@@ -29,3 +29,9 @@ bus_write (u16 address, u8 value)
   NO_IMPL
 }
 
+void
+bus_write16(u16 address, u16 value)
+{
+  // TODO: implement
+}
+

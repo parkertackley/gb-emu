@@ -9,7 +9,8 @@
  */
 cpu_context ctx = {0};
 
-void cpu_init()
+void
+cpu_init()
 {
   // TODO: implement this
   /* Set entry point */

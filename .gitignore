@@ -1,5 +1,6 @@
 #files
 roms/tetris.gb
+.DS_Store
 
 # directories
 build/

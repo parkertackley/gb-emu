@@ -1,4 +1,6 @@
+#include "bus.h"
 #include "cpu.h"
+#include "cpu_util.h"
 #include "emu.h"
 
 /**
@@ -23,6 +25,38 @@ proc_none(cpu_context *ctx)
 static void
 proc_ld(cpu_context *ctx)
 {
+    if (ctx->dest_is_mem)
+    {
+        /* If address is 16 bit value */
+        if (ctx->curr_inst->reg_2 >= RT_AF)
+        {
+            emu_cycles(1);
+            bus_write16(ctx->mem_dest, ctx->fetched_data);
+        }
+        else
+        {
+            bus_write(ctx->mem_dest, ctx->fetched_data);
+        }
+        return;
+    }
+
+    if (ctx->curr_inst->mode == AM_HL_SPR)
+    {
+        u8 hflag = (cpu_read_reg(ctx->curr_inst->reg_2) & 0xF) +
+            (ctx->fetched_data & 0xF) >= 0x10;
+
+        u8 cflag = (cpu_read_reg(ctx->curr_inst->reg_2) & 0xFF) +
+            (ctx->fetched_data & 0xFF) >= 0x100;
+
+        cpu_set_flags(ctx, 0, 0, hflag, cflag);
+
+        return;
+    }
+
+    /* Main case -> set register to fetched data */
+    cpu_set_reg(ctx->curr_inst->reg_1, ctx->fetched_data);
+    cpu_set_reg(ctx->curr_inst->reg_1, cpu_read_reg(ctx->curr_inst->reg_2) + (char)ctx->fetched_data);
+
 }
 
 /**
