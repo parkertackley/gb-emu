@@ -49,14 +49,13 @@ proc_ld(cpu_context *ctx)
             (ctx->fetched_data & 0xFF) >= 0x100;
 
         cpu_set_flags(ctx, 0, 0, hflag, cflag);
+        cpu_set_reg(ctx->curr_inst->reg_1, cpu_read_reg(ctx->curr_inst->reg_2) + (char)ctx->fetched_data);
 
         return;
     }
 
     /* Main case -> set register to fetched data */
     cpu_set_reg(ctx->curr_inst->reg_1, ctx->fetched_data);
-    cpu_set_reg(ctx->curr_inst->reg_1, cpu_read_reg(ctx->curr_inst->reg_2) + (char)ctx->fetched_data);
-
 }
 
 /**

@@ -2,7 +2,7 @@
 #include "common.h"
 
 u8
-bus_read (u16 address)
+bus_read (const u16 address)
 {
   /* Read from cart */
   if(address < 0x8000)
@@ -17,7 +17,7 @@ bus_read (u16 address)
 }
 
 void
-bus_write (u16 address, u8 value)
+bus_write (const u16 address, const u8 value)
 {
   if(address < 0x8000)
   {
@@ -29,9 +29,18 @@ bus_write (u16 address, u8 value)
   NO_IMPL
 }
 
-void
-bus_write16(u16 address, u16 value)
+u16
+bus_read16(const u16 address)
 {
-  // TODO: implement
+  const u16 lo = bus_read(address);
+  const u16 hi = bus_read(address + 1);
+
+  return lo | (hi << 8);
 }
 
+void
+bus_write16(const u16 address, const u16 value)
+{
+  bus_write(address + 1, (value >> 8) & 0xFF);
+  bus_write(address, value & 0xFF);
+}
