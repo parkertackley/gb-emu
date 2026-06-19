@@ -8,11 +8,38 @@ bus_read (const u16 address)
   if(address < 0x8000)
   {
     return cart_read(address);
+  } else if (address < 0xA000)
+  {
+    printf("UNSUPPORTED Bus read! (%04X)\n", address);
+    NO_IMPL
+  } else if (address < 0xC000)
+  {
+    return cart_read(address);
+  } else if (address < 0xE000)
+  {
+    /* WRAM */
+    return wram_read(address);
+  } else if (address < 0xFE00)
+  {
+    return 0;
+  } else if (0xFEA0)
+  {
+    printf("UNSUPPORTED Bus read! (%04X)\n", address);
+    NO_IMPL
+  } else if (address < 0xFF00)
+  {
+    return 0;
+  } else if (address < 0xFF80)
+  {
+    printf("UNSUPPORTED Bus read! (%04X)\n", address);
+    NO_IMPL
+  } else if (address < 0xFFFF)
+  {
+    printf("UNSUPPORTED Bus read! (%04X)\n", address);
+    NO_IMPL
   }
 
-  /* Not yet implemented */
-  printf("UNSUPPORTED Bus read! (%04X)\n", address);
-  // NO_IMPL
+  hram_read(address);
 }
 
 void
