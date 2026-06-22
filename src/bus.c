@@ -39,7 +39,7 @@ bus_read (const u16 address)
     NO_IMPL
   }
 
-  hram_read(address);
+  return hram_read(address);
 }
 
 void
@@ -48,11 +48,38 @@ bus_write (const u16 address, const u8 value)
   if(address < 0x8000)
   {
     cart_write(address, value);
-  }
+  } else if (address < 0xA000)
+  {
+    printf("UNSUPPORTED Bus write! (%04X)\n", address);
+    NO_IMPL
+  } else if (address < 0xC000)
+  {
+    cart_write(address, value);
+  } else if (address < 0xE000)
+  {
+    wram_write(address, value);
+  } else if (address < 0xFE00)
+  {
 
-  /* Not yet implemented */
-  printf("UNSUPPORTED Bus write! (%04X)\n", address);
-  // NO_IMPL
+  }else if (address < 0xFEA0)
+  {
+    printf("UNSUPPORTED Bus write! (%04X)\n", address);
+    NO_IMPL
+  } else if (address < 0xFF00)
+  {
+    // unusable reserved
+  } else if (address < 0xFF80)
+  {
+    printf("UNSUPPORTED Bus write! (%04X)\n", address);
+    NO_IMPL
+  } else if (address == 0xFFFF)
+  {
+    printf("UNSUPPORTED Bus write! (%04X)\n", address);
+    NO_IMPL
+  } else
+  {
+    hram_write(address, value);
+  }
 }
 
 u16

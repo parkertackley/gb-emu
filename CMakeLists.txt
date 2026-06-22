@@ -17,6 +17,8 @@ set(SOURCES
         src/cpu_util.c
         src/cpu_proc.c
         src/cpu_fetch.c
+        src/ram.c
+        includes/ram.h
 )
 
 add_executable(gb-emu ${SOURCES})
